@@ -179,7 +179,7 @@ public class ConsultaCocheras extends JFrame {
 					posicionListaCocheras++;
 							
 				}catch(Exception a) {
-					JOptionPane.showMessageDialog(null,"Error! Ya estas en el primer Registro");
+					JOptionPane.showMessageDialog(null,"Error! Ya estas en el ultimo Registro");
 
 				}
 			}
