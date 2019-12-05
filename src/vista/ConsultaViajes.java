@@ -9,11 +9,13 @@ import javax.swing.border.EmptyBorder;
 
 import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import hibernateutil.HibernateUtil;
 import modelo.TCocheras;
+import modelo.TLineas;
 import modelo.TViajes;
 
 import javax.swing.JButton;
@@ -72,6 +74,27 @@ public class ConsultaViajes extends JFrame {
 		JButton button = new JButton("REALIZA CONSULTA");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+				Session session = sessionFactory.openSession();
+				
+				try {
+					//Reseteamos posicion
+					posicionListaViajes=0;
+					//Obtenemos la posicionsiguiente de la lista de accesos
+					TViajes cochera = session.load(TViajes.class, Integer.parseInt(tfCOdViaje.getText()));						
+					actualizarDatosVentan(cochera);
+					//Buscamos posicion correcta
+					while(viajes.get(posicionListaViajes).getCodViaje()!=cochera.getCodViaje()){
+						posicionListaViajes++;
+					}
+					session.close();
+							
+				}catch (ObjectNotFoundException onfa) {
+					JOptionPane.showMessageDialog(null,"Error! No se encontro la clase ");
+				}
+				catch(Exception a) {
+					JOptionPane.showMessageDialog(null,"Error! El registro no existe");
+				}
 			}
 		});
 		button.setBounds(223, 12, 193, 25);
@@ -80,6 +103,9 @@ public class ConsultaViajes extends JFrame {
 		JButton button_1 = new JButton("PRIMER REG");
 		button_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				TViajes fisrtCochera=viajes.get(0);
+				actualizarDatosVentan(fisrtCochera);
+				posicionListaViajes=0;
 			}
 		});
 		button_1.setBounds(12, 226, 148, 25);
@@ -88,6 +114,9 @@ public class ConsultaViajes extends JFrame {
 		JButton button_2 = new JButton("ULTIMO REG");
 		button_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				TViajes lastCOchera = viajes.get(viajes.size()-1);
+				actualizarDatosVentan(lastCOchera);	
+				posicionListaViajes=viajes.size()-1;
 			}
 		});
 		button_2.setBounds(290, 226, 148, 25);
@@ -96,6 +125,20 @@ public class ConsultaViajes extends JFrame {
 		JButton button_3 = new JButton("<");
 		button_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+				Session session = sessionFactory.openSession();
+				
+				try {
+					//Obtenemos la posicion anterior de la lista de cocheras
+					TViajes anterior=viajes.get((posicionListaViajes)-1);
+					actualizarDatosVentan(anterior);
+					posicionListaViajes--;
+					session.close();		
+				}catch(Exception a) {
+					JOptionPane.showMessageDialog(null,"Error! Ya estas en el primer Registro");
+
+				}
+				
 			}
 		});
 		button_3.setBounds(181, 226, 44, 25);
@@ -104,6 +147,18 @@ public class ConsultaViajes extends JFrame {
 		JButton button_4 = new JButton(">");
 		button_4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+				Session session = sessionFactory.openSession();
+				
+				try {
+					TViajes siguiente=viajes.get((posicionListaViajes)+1);
+					actualizarDatosVentan(siguiente);
+					posicionListaViajes++;
+					session.close();
+				}catch(Exception a) {
+					JOptionPane.showMessageDialog(null,"Error! Ya estas en el ultimo Registro");
+
+				}
 			}
 		});
 		button_4.setBounds(237, 226, 44, 25);
