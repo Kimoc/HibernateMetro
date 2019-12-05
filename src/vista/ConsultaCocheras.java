@@ -158,7 +158,7 @@ public class ConsultaCocheras extends JFrame {
 					TCocheras anterior=cocheras.get((posicionListaCocheras)-1);
 					actualizarDatosVentan(anterior);
 					posicionListaCocheras--;
-							
+					session.close();		
 				}catch(Exception a) {
 					JOptionPane.showMessageDialog(null,"Error! Ya estas en el primer Registro");
 

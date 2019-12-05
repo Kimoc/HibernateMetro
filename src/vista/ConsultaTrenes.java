@@ -145,6 +145,15 @@ public class ConsultaTrenes extends JFrame {
 		contentPane.add(tfCodCOchera);
 		tfCodCOchera.setColumns(10);
 		
+		JButton btnUltimoReg = new JButton("ULTIMO REG");
+		btnUltimoReg.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				TTrenes lastTren = listaTrenes.get(listaTrenes.size()-1);
+				actualizarDatosVentan(lastTren);	
+				posicionListaTrenes=listaTrenes.size()-1;
+			}
+		});
+		
 		JButton btnNewButton = new JButton("PRIMER REG");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -155,15 +164,6 @@ public class ConsultaTrenes extends JFrame {
 		});
 		btnNewButton.setBounds(12, 226, 148, 25);
 		contentPane.add(btnNewButton);
-		
-		JButton btnUltimoReg = new JButton("ULTIMO REG");
-		btnUltimoReg.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				TTrenes lastTren = listaTrenes.get(listaTrenes.size()-1);
-				actualizarDatosVentan(lastTren);	
-				posicionListaTrenes=listaTrenes.size()-1;
-			}
-		});
 		btnUltimoReg.setBounds(290, 226, 148, 25);
 		contentPane.add(btnUltimoReg);
 		
