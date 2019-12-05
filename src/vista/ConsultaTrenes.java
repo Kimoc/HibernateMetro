@@ -14,8 +14,8 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import hibernateutil.HibernateUtil;
-import modelo.TAccesos;
 import modelo.TCocheras;
+import modelo.TTrenes;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -25,14 +25,16 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
-public class ConsultaCocheras extends JFrame {
+public class ConsultaTrenes extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField tfCodCochera;
+	private JTextField tfCodTren;
 	private JTextField tfNombre;
-	private JTextField tfDireccion;
-	private ArrayList<TCocheras> cocheras;
-	private int posicionListaCocheras;
+	private JTextField tfTipo;
+	private JTextField tfCodLinea;
+	private JTextField tfCodCOchera;
+	private ArrayList<TTrenes> listaTrenes;
+	private int posicionListaTrenes;
 
 	/**
 	 * Launch the application.
@@ -41,7 +43,7 @@ public class ConsultaCocheras extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ConsultaCocheras frame = new ConsultaCocheras();
+					ConsultaTrenes frame = new ConsultaTrenes();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -53,36 +55,37 @@ public class ConsultaCocheras extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public ConsultaCocheras() {
+	public ConsultaTrenes() {
+		//Rellenamos array con los accesos para poder recorrerlo
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		Transaction tr = session.beginTransaction();
+		@SuppressWarnings("unchecked")
+		Query<TTrenes> query = session.createQuery("from TTrenes");
+		listaTrenes =(ArrayList<TTrenes>) query.list();
+		tr.commit();
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 452, 307);
+		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		//Rellenamos array con los accesos para poder recorrerlo
-				Session session = HibernateUtil.getSessionFactory().openSession();
-				Transaction tr = session.beginTransaction();
-				@SuppressWarnings("unchecked")
-				Query<TCocheras> query = session.createQuery("from TCocheras");
-				cocheras =(ArrayList<TCocheras>) query.list();
-				tr.commit();
 		
-		JButton btnLanzarConsulta = new JButton("LANZAR CONSULTA");
-		btnLanzarConsulta.addActionListener(new ActionListener() {
+		JButton btnRealizara = new JButton("REALIZA CONSULTA");
+		btnRealizara.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 				Session session = sessionFactory.openSession();
 				
 				try {
 					//Reseteamos posicion
-					posicionListaCocheras=0;
+					posicionListaTrenes=0;
 					//Obtenemos la posicionsiguiente de la lista de accesos
-					TCocheras cochera = session.load(TCocheras.class, Integer.parseInt(tfCodCochera.getText()));						
-					actualizarDatosVentan(cochera);
+					TTrenes tren = session.load(TTrenes.class, Integer.parseInt(tfCodTren.getText()));						
+					actualizarDatosVentan(tren);
 					//Buscamos posicion correcta
-					while(cocheras.get(posicionListaCocheras).getCodCochera()!=cochera.getCodCochera()){
-						posicionListaCocheras++;
+					while(listaTrenes.get(posicionListaTrenes).getCodTren()!=tren.getCodTren()){
+						posicionListaTrenes++;
 					}
 					session.close();
 							
@@ -92,59 +95,76 @@ public class ConsultaCocheras extends JFrame {
 				catch(Exception a) {
 					JOptionPane.showMessageDialog(null,"Error! El registro no existe");
 				}
-				
 			}
 		});
-		btnLanzarConsulta.setBounds(230, 0, 190, 25);
-		contentPane.add(btnLanzarConsulta);
+		btnRealizara.setBounds(223, 12, 193, 25);
+		contentPane.add(btnRealizara);
 		
-		JLabel lblCodcochera = new JLabel("COD.COCHERA");
-		lblCodcochera.setBounds(32, 50, 122, 15);
-		contentPane.add(lblCodcochera);
+		JLabel lblCodtren = new JLabel("COD.TREN");
+		lblCodtren.setBounds(24, 48, 109, 15);
+		contentPane.add(lblCodtren);
 		
-		JLabel lblNombre = new JLabel("NOMBRE");
-		lblNombre.setBounds(32, 77, 66, 15);
-		contentPane.add(lblNombre);
+		JLabel lblNewLabel = new JLabel("NOMBRE");
+		lblNewLabel.setBounds(24, 75, 66, 15);
+		contentPane.add(lblNewLabel);
 		
-		JLabel lblDireccin = new JLabel("DIRECCIÓN");
-		lblDireccin.setBounds(32, 104, 122, 15);
-		contentPane.add(lblDireccin);
+		JLabel lblTipo = new JLabel("TIPO");
+		lblTipo.setBounds(26, 102, 66, 15);
+		contentPane.add(lblTipo);
 		
-		tfCodCochera = new JTextField();
-		tfCodCochera.setBounds(146, 48, 124, 19);
-		contentPane.add(tfCodCochera);
-		tfCodCochera.setColumns(10);
+		JLabel lblCodlinea = new JLabel("COD.LINEA");
+		lblCodlinea.setBounds(26, 129, 87, 15);
+		contentPane.add(lblCodlinea);
+		
+		JLabel lblCod = new JLabel("COD.COCHERA");
+		lblCod.setBounds(26, 156, 109, 15);
+		contentPane.add(lblCod);
+		
+		tfCodTren = new JTextField();
+		tfCodTren.setBounds(101, 49, 124, 19);
+		contentPane.add(tfCodTren);
+		tfCodTren.setColumns(10);
 		
 		tfNombre = new JTextField();
-		tfNombre.setBounds(146, 75, 124, 19);
+		tfNombre.setBounds(101, 75, 124, 19);
 		contentPane.add(tfNombre);
 		tfNombre.setColumns(10);
 		
-		tfDireccion = new JTextField();
-		tfDireccion.setBounds(146, 102, 222, 50);
-		contentPane.add(tfDireccion);
-		tfDireccion.setColumns(10);
+		tfTipo = new JTextField();
+		tfTipo.setBounds(101, 100, 124, 19);
+		contentPane.add(tfTipo);
+		tfTipo.setColumns(10);
+		
+		tfCodLinea = new JTextField();
+		tfCodLinea.setBounds(111, 127, 124, 19);
+		contentPane.add(tfCodLinea);
+		tfCodLinea.setColumns(10);
+		
+		tfCodCOchera = new JTextField();
+		tfCodCOchera.setBounds(131, 154, 124, 19);
+		contentPane.add(tfCodCOchera);
+		tfCodCOchera.setColumns(10);
 		
 		JButton btnNewButton = new JButton("PRIMER REG");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				TCocheras fisrtCochera=cocheras.get(0);
+				TTrenes fisrtCochera=listaTrenes.get(0);
 				actualizarDatosVentan(fisrtCochera);
-				posicionListaCocheras=0;
+				posicionListaTrenes=0;
 			}
 		});
-		btnNewButton.setBounds(12, 226, 142, 25);
+		btnNewButton.setBounds(12, 226, 148, 25);
 		contentPane.add(btnNewButton);
 		
 		JButton btnUltimoReg = new JButton("ULTIMO REG");
 		btnUltimoReg.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				TCocheras lastCOchera = cocheras.get(cocheras.size()-1);
-				actualizarDatosVentan(lastCOchera);	
-				posicionListaCocheras=cocheras.size()-1;
+				TTrenes lastTren = listaTrenes.get(listaTrenes.size()-1);
+				actualizarDatosVentan(lastTren);	
+				posicionListaTrenes=listaTrenes.size()-1;
 			}
 		});
-		btnUltimoReg.setBounds(296, 226, 142, 25);
+		btnUltimoReg.setBounds(290, 226, 148, 25);
 		contentPane.add(btnUltimoReg);
 		
 		JButton button = new JButton("<");
@@ -154,18 +174,17 @@ public class ConsultaCocheras extends JFrame {
 				Session session = sessionFactory.openSession();
 				
 				try {
-					//Obtenemos la posicion anterior de la lista de cocheras
-					TCocheras anterior=cocheras.get((posicionListaCocheras)-1);
-					actualizarDatosVentan(anterior);
-					posicionListaCocheras--;
-							
+					TTrenes siguiente=listaTrenes.get((posicionListaTrenes)-1);
+					actualizarDatosVentan(siguiente);
+					posicionListaTrenes--;
+					session.close();
 				}catch(Exception a) {
 					JOptionPane.showMessageDialog(null,"Error! Ya estas en el primer Registro");
 
 				}
 			}
 		});
-		button.setBounds(164, 226, 59, 25);
+		button.setBounds(181, 226, 44, 25);
 		contentPane.add(button);
 		
 		JButton button_1 = new JButton(">");
@@ -175,9 +194,9 @@ public class ConsultaCocheras extends JFrame {
 				Session session = sessionFactory.openSession();
 				
 				try {
-					TCocheras siguiente=cocheras.get((posicionListaCocheras)+1);
+					TTrenes siguiente=listaTrenes.get((posicionListaTrenes)+1);
 					actualizarDatosVentan(siguiente);
-					posicionListaCocheras++;
+					posicionListaTrenes++;
 					session.close();
 				}catch(Exception a) {
 					JOptionPane.showMessageDialog(null,"Error! Ya estas en el ultimo Registro");
@@ -185,15 +204,16 @@ public class ConsultaCocheras extends JFrame {
 				}
 			}
 		});
-		button_1.setBounds(230, 226, 59, 25);
+		button_1.setBounds(237, 226, 44, 25);
 		contentPane.add(button_1);
 	}
-	public void actualizarDatosVentan(TCocheras cochera) {
+	public void actualizarDatosVentan(TTrenes trenes) {
 		try {
-			
-		tfCodCochera.setText(String.valueOf(cochera.getCodCochera()));
-		tfNombre.setText(cochera.getNombre());
-		tfDireccion.setText(cochera.getDireccion());
+		tfCodTren.setText(String.valueOf(trenes.getCodTren()));
+		tfNombre.setText(trenes.getNombre());
+		tfTipo.setText(trenes.getTipo());
+		tfCodLinea.setText(String.valueOf(trenes.getTLineas().getCodLinea()));
+		tfCodCOchera.setText(String.valueOf(trenes.getTCocheras().getCodCochera()));
 		
 		}catch (ObjectNotFoundException onfe) {
 			JOptionPane.showMessageDialog(null,"Error! No se encontro la clase ");

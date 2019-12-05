@@ -89,6 +89,8 @@ public class ConsultaEstaciones extends JFrame {
 					while(estaciones.get(posicionListaEstaciones).getCodEstacion()!=estacion.getCodEstacion()){
 						posicionListaEstaciones++;
 					}
+					session.close();
+
 							
 				}catch (ObjectNotFoundException onfa) {
 					JOptionPane.showMessageDialog(null,"Error! No se encontro la clase ");
@@ -197,6 +199,7 @@ public class ConsultaEstaciones extends JFrame {
 					TEstaciones anterior=estaciones.get((posicionListaEstaciones)-1);
 					actualizarDatosVentan(anterior);
 					posicionListaEstaciones--;
+					session.close();
 							
 				}catch(Exception a) {
 					JOptionPane.showMessageDialog(null,"Error! Ya estas en el primer Registro");
@@ -217,6 +220,7 @@ public class ConsultaEstaciones extends JFrame {
 					TEstaciones siguiente=estaciones.get((posicionListaEstaciones)+1);
 					actualizarDatosVentan(siguiente);
 					posicionListaEstaciones++;
+					session.close();
 							
 				}catch(Exception a) {
 					JOptionPane.showMessageDialog(null,"Error! Ya estas en el ultimo Registro");

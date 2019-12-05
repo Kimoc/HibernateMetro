@@ -77,18 +77,46 @@ public class VistaTablas extends JFrame {
 		contentPane.add(btnEstaciones);
 		
 		JButton btnLineaestacin = new JButton("Linea/Estación");
+		btnLineaestacin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ConsultaLineaEstacion ventaLinEst=new ConsultaLineaEstacion();
+				ventaLinEst.setVisible(true);
+				ventaLinEst.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+			}
+		});
 		btnLineaestacin.setBounds(43, 186, 147, 25);
 		contentPane.add(btnLineaestacin);
 		
 		JButton btnTrenes = new JButton("Trenes");
+		btnTrenes.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ConsultaTrenes ventaTrenes= new ConsultaTrenes();
+				ventaTrenes.setVisible(true);
+				ventaTrenes.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+			}
+		});
 		btnTrenes.setBounds(259, 72, 147, 25);
 		contentPane.add(btnTrenes);
 		
 		JButton btnLineas = new JButton("Lineas");
+		btnLineas.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ConsultaLineas ventaLineas= new ConsultaLineas();
+				ventaLineas.setVisible(true);
+				ventaLineas.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+			}
+		});
 		btnLineas.setBounds(259, 108, 147, 25);
 		contentPane.add(btnLineas);
 		
 		JButton btnViajes = new JButton("Viajes");
+		btnViajes.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ConsultaViajes ventaViajes=new ConsultaViajes();
+				ventaViajes.setVisible(true);
+				ventaViajes.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+			}
+		});
 		btnViajes.setBounds(259, 149, 147, 25);
 		contentPane.add(btnViajes);
 		

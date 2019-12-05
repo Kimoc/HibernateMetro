@@ -16,6 +16,7 @@ import org.hibernate.query.Query;
 
 import hibernateutil.HibernateUtil;
 import modelo.TAccesos;
+import modelo.TLineaEstacion;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -25,14 +26,14 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
-public class ConsultaAccesos extends JFrame {
+public class ConsultaLineaEstacion extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField tfAcceso;
 	private JTextField tfEstacion;
 	private JTextField tfDescripcion;
-	private ArrayList<TAccesos> accesos;
-	private int posicionListaAcceso;
+	private ArrayList<TLineaEstacion> lineaEstaciones;
+	private int posicionListaLineaEstacion;
 
 	/**
 	 * Launch the application.
@@ -53,7 +54,7 @@ public class ConsultaAccesos extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public ConsultaAccesos() {
+	public ConsultaLineaEstacion() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 465, 307);
 		contentPane = new JPanel();
@@ -61,31 +62,31 @@ public class ConsultaAccesos extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-	
-		
-		JLabel lblConsultaAccesos = new JLabel("CONSULTA ACCESOS");
-		lblConsultaAccesos.setBounds(34, 17, 153, 15);
-		contentPane.add(lblConsultaAccesos);
-		
-		JLabel lblNewLabel = new JLabel("COD.ACCESO");
-		lblNewLabel.setBounds(34, 65, 117, 15);
-		contentPane.add(lblNewLabel);
-		
-		JLabel lblDescripcin = new JLabel("DESCRIPCIÓN");
-		lblDescripcin.setBounds(34, 119, 117, 15);
-		contentPane.add(lblDescripcin);
-		
-		JLabel lblCodestacin = new JLabel("COD.ESTACIÓN");
-		lblCodestacin.setBounds(34, 92, 117, 15);
-		contentPane.add(lblCodestacin);
-		
 		//Rellenamos array con los accesos para poder recorrerlo
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction tr = session.beginTransaction();
 		@SuppressWarnings("unchecked")
-		Query<TAccesos> query = session.createQuery("from TAccesos");
-		accesos =(ArrayList<TAccesos>) query.list();
+		Query<TLineaEstacion> query = session.createQuery("from TLineaEstacion");
+		lineaEstaciones =(ArrayList<TLineaEstacion>) query.list();
 		tr.commit();
+		
+		JLabel lblConsultaAccesos = new JLabel("CONSULTA LINEA/ESTACION");
+		lblConsultaAccesos.setBounds(34, 17, 214, 15);
+		contentPane.add(lblConsultaAccesos);
+		
+		JLabel lblNewLabel = new JLabel("COD.LINEA");
+		lblNewLabel.setBounds(34, 65, 117, 15);
+		contentPane.add(lblNewLabel);
+		
+		JLabel lblDescripcin = new JLabel("COD.ESTACION");
+		lblDescripcin.setBounds(34, 119, 117, 15);
+		contentPane.add(lblDescripcin);
+		
+		JLabel lblCodestacin = new JLabel("ORDEN");
+		lblCodestacin.setBounds(34, 92, 117, 15);
+		contentPane.add(lblCodestacin);
+		
+		
 		
 		tfAcceso = new JTextField();
 		tfAcceso.setBounds(157, 63, 124, 19);
@@ -98,7 +99,7 @@ public class ConsultaAccesos extends JFrame {
 		tfEstacion.setColumns(10);
 		
 		tfDescripcion = new JTextField();
-		tfDescripcion.setBounds(157, 117, 253, 79);
+		tfDescripcion.setBounds(157, 117, 133, 25);
 		contentPane.add(tfDescripcion);
 		tfDescripcion.setColumns(10);
 		
@@ -113,10 +114,10 @@ public class ConsultaAccesos extends JFrame {
 				
 				try {
 					//Obtenemos la posicion anterior de la lista de accesos
-					TAccesos anterior=accesos.get((posicionListaAcceso)-1);
+					TLineaEstacion anterior=lineaEstaciones.get((posicionListaLineaEstacion)-1);
 					actualizarDatosVentan(anterior);
-					posicionListaAcceso--;
-							
+					posicionListaLineaEstacion--;
+					session.close();		
 				}catch(Exception a) {
 					JOptionPane.showMessageDialog(null,"Error! Ya estas en el primer Registro");
 
@@ -137,9 +138,9 @@ public class ConsultaAccesos extends JFrame {
 				try {
 					
 					//Obtenemos la posicion siguiente de la lista de accesos
-					TAccesos siguiente=accesos.get((posicionListaAcceso)+1);
+					TLineaEstacion siguiente=lineaEstaciones.get((posicionListaLineaEstacion)+1);
 					actualizarDatosVentan(siguiente);
-					posicionListaAcceso++;
+					posicionListaLineaEstacion++;
 					session.close();	
 				}catch(Exception a) {
 					JOptionPane.showMessageDialog(null,"Error! Ya estas en el ultimo Registro");
@@ -155,9 +156,10 @@ public class ConsultaAccesos extends JFrame {
 		JButton btnPr = new JButton("PRIMER REG");
 		btnPr.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				TAccesos firstAcceso = accesos.get(0);
-				actualizarDatosVentan(firstAcceso);	
-				posicionListaAcceso=0;
+				TLineaEstacion firstLineaEstacion = lineaEstaciones.get(0);
+				actualizarDatosVentan(firstLineaEstacion);	
+				posicionListaLineaEstacion=0;
+				
 			}
 		});
 		btnPr.setBounds(12, 233, 133, 25);
@@ -166,9 +168,9 @@ public class ConsultaAccesos extends JFrame {
 		JButton btnUlitmoReg = new JButton("ULTIMOS REG");
 		btnUlitmoReg.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				TAccesos firstAcceso = accesos.get(accesos.size()-1);
-				actualizarDatosVentan(firstAcceso);	
-				posicionListaAcceso=accesos.size()-1;
+				TLineaEstacion lastLineaEstacion  =lineaEstaciones.get(lineaEstaciones.size()-1);
+				actualizarDatosVentan(lastLineaEstacion);	
+				posicionListaLineaEstacion=lineaEstaciones.size()-1;
 			}
 		});
 		btnUlitmoReg.setBounds(295, 233, 133, 25);
@@ -182,13 +184,16 @@ public class ConsultaAccesos extends JFrame {
 				
 				try {
 					//Reseteamos posicion
-					posicionListaAcceso=0;
+					posicionListaLineaEstacion=0;
 					//Obtenemos la posicionsiguiente de la lista de accesos
-					TAccesos acceso = session.load(TAccesos.class, Integer.parseInt(tfAcceso.getText()));						
+					TLineaEstacion acceso = session.load(TLineaEstacion.class, Integer.parseInt(tfAcceso.getText()));						
 					actualizarDatosVentan(acceso);
 					//Buscamos posicion correcta
-					while(accesos.get(posicionListaAcceso).getCodAcceso()!=acceso.getCodAcceso()){
-						posicionListaAcceso++;
+					//while(lineaEstaciones.get(posicionListaLineaEstacion).getTLineas().getCodLinea()!=acceso.getTLineas().getCodLinea() &&
+					//		lineaEstaciones.get(posicionListaLineaEstacion).getTEstaciones().getCodEstacion()!=acceso.getTEstaciones().getCodEstacion()){
+						
+					while(lineaEstaciones.get(posicionListaLineaEstacion).getId().getCodEstacion()!=acceso.getId().getCodEstacion()) {
+					posicionListaLineaEstacion++;
 					}
 					session.close();
 
@@ -208,12 +213,12 @@ public class ConsultaAccesos extends JFrame {
 		
 	}
 	
-	public void actualizarDatosVentan(TAccesos acceso) {
+	public void actualizarDatosVentan(TLineaEstacion lineaEstacion) {
 		try {
 			
-		tfAcceso.setText(String.valueOf(acceso.getCodAcceso()));
-		tfDescripcion.setText(acceso.getDescripcion());
-		tfEstacion.setText(String.valueOf(acceso.getTEstaciones().getCodEstacion()));
+		tfAcceso.setText(String.valueOf(lineaEstacion.getId().getCodLinea()));
+		tfDescripcion.setText(String.valueOf(lineaEstacion.getId().getCodLinea()));
+		tfEstacion.setText(String.valueOf(lineaEstacion.getOrden()));
 		
 		}catch (ObjectNotFoundException onfe) {
 			JOptionPane.showMessageDialog(null,"Error! No se encontro la clase ");
