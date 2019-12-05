@@ -85,24 +85,22 @@ public class VentanaInsertarLineaEstacion extends JFrame {
 				SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 				Session session = sessionFactory.openSession();
 				Transaction transaction = session.beginTransaction();
-				if(Integer.valueOf(tfNumLinea.getText()) > 0 && Integer.valueOf(tfNumEstacion.getText()) > 0 
-						&& Integer.valueOf(tfNumOrden.getText()) > 0  ) {
+				
 					
-					TLineas linea = session.load(TLineas.class, Integer.valueOf(tfNumLinea.getText()));
-					TEstaciones estaciones = session.load(TEstaciones.class, Integer.valueOf(tfNumEstacion.getText()));
-					
-					TLineaEstacionId idLineaEstacion = new TLineaEstacionId(linea.getCodLinea(), estaciones.getCodEstacion());
-					TLineaEstacion lineaEstacion = new TLineaEstacion(idLineaEstacion, null, null, Integer.valueOf(tfNumOrden.getText()));
 					try {
+						TLineas linea = session.load(TLineas.class, Integer.valueOf(tfNumLinea.getText()));
+						TEstaciones estaciones = session.load(TEstaciones.class, Integer.valueOf(tfNumEstacion.getText()));
+						TLineaEstacionId idLineaEstacion = new TLineaEstacionId(linea.getCodLinea(), estaciones.getCodEstacion());
+						TLineaEstacion lineaEstacion = new TLineaEstacion(idLineaEstacion, null, null, Integer.valueOf(tfNumOrden.getText()));
 						session.save(lineaEstacion);
 						transaction.commit();
-						JOptionPane.showMessageDialog(null, "Insertada");
-					} catch (Exception a) {
+						JOptionPane.showMessageDialog(null, "Se ha insertado el registro con exito en la base de datos");
+					} catch (NumberFormatException nfe) {
+						JOptionPane.showMessageDialog(null,"Error! Solo se admiten numeros");
+					}catch (Exception a) {
 						a.printStackTrace();
-						JOptionPane.showMessageDialog(null, "Error");
+						JOptionPane.showMessageDialog(null, "Error! El registro seguramente ya exista en la base de datos");
 					}
-				} else {
-				}
 				
 				
 			}
