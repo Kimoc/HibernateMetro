@@ -54,6 +54,13 @@ public class VistaTablas extends JFrame {
 		contentPane.add(btnAccesos);
 		
 		JButton btnCocheras = new JButton("Cocheras");
+		btnCocheras.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ConsultaCocheras ventaCochera= new ConsultaCocheras();
+				ventaCochera.setVisible(true);
+				ventaCochera.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+			}
+		});
 		btnCocheras.setBounds(43, 108, 147, 25);
 		contentPane.add(btnCocheras);
 		

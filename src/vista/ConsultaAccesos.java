@@ -136,7 +136,6 @@ public class ConsultaAccesos extends JFrame {
 				
 				try {
 					
-					TAccesos acceso = session.get(TAccesos.class, Integer.parseInt(tfAcceso.getText()));
 					//Obtenemos la posicion siguiente de la lista de accesos
 					TAccesos siguiente=accesos.get((posicionListaAcceso)+1);
 					actualizarDatosVentan(siguiente);
