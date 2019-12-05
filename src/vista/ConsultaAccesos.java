@@ -32,6 +32,7 @@ public class ConsultaAccesos extends JFrame {
 	private JTextField tfEstacion;
 	private JTextField tfDescripcion;
 	private ArrayList<TAccesos> accesos;
+	private int posicionListaAcceso;
 
 	/**
 	 * Launch the application.
@@ -60,9 +61,7 @@ public class ConsultaAccesos extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JButton btnLanzarConsulta = new JButton("LANZAR CONSULTA");
-		btnLanzarConsulta.setBounds(235, 12, 175, 25);
-		contentPane.add(btnLanzarConsulta);
+	
 		
 		JLabel lblConsultaAccesos = new JLabel("CONSULTA ACCESOS");
 		lblConsultaAccesos.setBounds(34, 17, 153, 15);
@@ -80,7 +79,7 @@ public class ConsultaAccesos extends JFrame {
 		lblCodestacin.setBounds(34, 92, 117, 15);
 		contentPane.add(lblCodestacin);
 		
-		//Rellenamos array de datos
+		//Rellenamos array con los accesos para poder recorrerlo
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction tr = session.beginTransaction();
 		@SuppressWarnings("unchecked")
@@ -105,42 +104,24 @@ public class ConsultaAccesos extends JFrame {
 		
 		
 		
-		JButton btnUlitmoReg = new JButton("ULTIMOS REG");
-		btnUlitmoReg.setBounds(295, 233, 133, 25);
-		contentPane.add(btnUlitmoReg);
 		
 		JButton btnNewButton = new JButton("<");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 				Session session = sessionFactory.openSession();
-			
+				
 				try {
-					
-					
-					TAccesos linea = session.load(TAccesos.class, Integer.parseInt(tfAcceso.getText()));
-					if(linea.getCodAcceso()<accesos.get(0).getCodAcceso()) {
-						tfAcceso.setText(String.valueOf((Integer.parseInt(tfAcceso.getText()) - 1)));
-					actualizarDatosVentan(linea);
-					}else {
-						JOptionPane.showMessageDialog(null,"Este es el primero no puedes retroceder mas ");
-						return;
-					}
-					
-				}catch (NumberFormatException nfe) {
-					JOptionPane.showMessageDialog(null,"Error! No existe el codigo ");
-					tfAcceso.setText(String.valueOf((Integer.parseInt(tfAcceso.getText()) + 1)));
+					//Obtenemos la posicion anterior de la lista de accesos
+					TAccesos anterior=accesos.get((posicionListaAcceso)-1);
+					actualizarDatosVentan(anterior);
+					posicionListaAcceso--;
+							
+				}catch(Exception a) {
+					JOptionPane.showMessageDialog(null,"Error! Ya estas en el primer Registro");
+
 				}
-				catch(ObjectNotFoundException infe) {
-					
-					tfAcceso.setText(String.valueOf((Integer.parseInt(tfAcceso.getText()) + 1)));
-				}catch(IllegalArgumentException iae) {
-					JOptionPane.showMessageDialog(null, "Error! No existen mas registros");
-					tfAcceso.setText(String.valueOf((Integer.parseInt(tfAcceso.getText()) + 1)));
-				}catch(HibernateException he) {
-					JOptionPane.showMessageDialog(null, "Error! No existen mas registros");
-					tfAcceso.setText(String.valueOf((Integer.parseInt(tfAcceso.getText()) + 1)));
-				}
+			
 			
 			}
 		});
@@ -148,6 +129,26 @@ public class ConsultaAccesos extends JFrame {
 		contentPane.add(btnNewButton);
 		
 		JButton btnNewButton_1 = new JButton(">");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+				Session session = sessionFactory.openSession();
+				
+				try {
+					
+					TAccesos acceso = session.get(TAccesos.class, Integer.parseInt(tfAcceso.getText()));
+					//Obtenemos la posicion siguiente de la lista de accesos
+					TAccesos siguiente=accesos.get((posicionListaAcceso)+1);
+					actualizarDatosVentan(siguiente);
+					posicionListaAcceso++;
+							
+				}catch(Exception a) {
+					JOptionPane.showMessageDialog(null,"Error! Ya estas en el ultimo Registro");
+					
+				}
+			
+			}
+		});
 		btnNewButton_1.setBounds(223, 233, 58, 25);
 		contentPane.add(btnNewButton_1);
 		
@@ -156,16 +157,56 @@ public class ConsultaAccesos extends JFrame {
 		btnPr.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				TAccesos firstAcceso = accesos.get(0);
-				actualizarDatosVentan(firstAcceso);
-				
-				
+				actualizarDatosVentan(firstAcceso);	
+				posicionListaAcceso=0;
 			}
 		});
 		btnPr.setBounds(12, 233, 133, 25);
 		contentPane.add(btnPr);
+		//vamos al ultimo registro de la tabla
+		JButton btnUlitmoReg = new JButton("ULTIMOS REG");
+		btnUlitmoReg.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				TAccesos firstAcceso = accesos.get(accesos.size()-1);
+				actualizarDatosVentan(firstAcceso);	
+				posicionListaAcceso=accesos.size()-1;
+			}
+		});
+		btnUlitmoReg.setBounds(295, 233, 133, 25);
+		contentPane.add(btnUlitmoReg);
+		//Metodo para lanzar consulta 
+		JButton btnLanzarConsulta = new JButton("LANZAR CONSULTA");
+		btnLanzarConsulta.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+				Session session = sessionFactory.openSession();
+				
+				try {
+					//Reseteamos posicion
+					posicionListaAcceso=0;
+					//Obtenemos la posicionsiguiente de la lista de accesos
+					TAccesos acceso = session.load(TAccesos.class, Integer.parseInt(tfAcceso.getText()));						
+					actualizarDatosVentan(acceso);
+					//Buscamos posicion correcta
+					while(accesos.get(posicionListaAcceso).getCodAcceso()!=acceso.getCodAcceso()){
+						posicionListaAcceso++;
+					}
+							
+				}catch (ObjectNotFoundException onfa) {
+					JOptionPane.showMessageDialog(null,"Error! No se encontro la clase ");
+				}
+				catch(Exception a) {
+					JOptionPane.showMessageDialog(null,"Error! El registro no existe");
+				}
+				
+			}
+		});
+		btnLanzarConsulta.setBounds(235, 12, 175, 25);
+		contentPane.add(btnLanzarConsulta);
 		
 		
 	}
+	
 	public void actualizarDatosVentan(TAccesos acceso) {
 		try {
 			
@@ -174,7 +215,8 @@ public class ConsultaAccesos extends JFrame {
 		tfEstacion.setText(String.valueOf(acceso.getTEstaciones().getCodEstacion()));
 		
 		}catch (ObjectNotFoundException onfe) {
-			
+			JOptionPane.showMessageDialog(null,"Error! No se encontro la clase ");
 		}
 	}
+	
 }
