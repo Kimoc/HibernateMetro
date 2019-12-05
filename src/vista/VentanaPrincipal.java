@@ -54,6 +54,17 @@ public class VentanaPrincipal extends JFrame {
 		});
 		btnInsertarNuevaLineaestacion.setBounds(189, 29, 239, 32);
 		contentPane.add(btnInsertarNuevaLineaestacion);
+		
+		JButton btnNewButton = new JButton("Ver tablas");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				VistaTablas ventaListaTablas= new VistaTablas();
+				ventaListaTablas.setVisible(true);
+				ventaListaTablas.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+			}
+		});
+		btnNewButton.setBounds(188, 73, 240, 25);
+		contentPane.add(btnNewButton);
 	}
 
 }
