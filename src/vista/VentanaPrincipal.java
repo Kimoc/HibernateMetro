@@ -35,7 +35,7 @@ public class VentanaPrincipal extends JFrame {
 	 * Create the frame.
 	 */
 	public VentanaPrincipal() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -65,6 +65,17 @@ public class VentanaPrincipal extends JFrame {
 		});
 		btnNewButton.setBounds(84, 89, 240, 32);
 		contentPane.add(btnNewButton);
+		
+		JButton btnNewButton_1 = new JButton("Modificar Estacion");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ActualizarEstacion ventaActualizar= new ActualizarEstacion();
+				ventaActualizar.setVisible(true);
+				ventaActualizar.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+				
+			}
+		});
+		btnNewButton_1.setBounds(84, 155, 239, 32);
+		contentPane.add(btnNewButton_1);
 	}
-
 }
